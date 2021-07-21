@@ -3,16 +3,15 @@ import java.util.Scanner;
 
 
 public class Game{
-    private int[] board; //game board
+    private byte[] board; //game board
 
     private byte currentPlayer; //X is 1, O is -1
 
     private static Scanner scanner = new Scanner(System.in);
 
     Game() {
-        board = new int[9];
-        board[1] = 1;
-        board[2] = -1;
+        board = new byte[9];
+        board[0] = 1;
         currentPlayer = 1; //X starts
     }
 
@@ -34,26 +33,53 @@ public class Game{
     }
 
     public void getNextTurn(){
-        System.out.println(String.format("Player: %c", getCurPlayer()));
-        System.out.println("Please select a board position to place at (x,y):");
-        boolean xValid = false;
-        int x;
-        while(!xValid){
-            System.out.print("x (1-3): ");
+        boolean turnGood = false;
+        while(!turnGood){
+            System.out.print(this.toString());
+            System.out.println(String.format("Player: %c", getCurPlayer()));
+            System.out.println("Please select a board position to place at (x,y):");
+            int x = getIntFromUser("x (1-3): ", "Invalid input. Please enter an integer between 1 and 3", 1, 3);
+            int y = getIntFromUser("y (1-3): ", "Invalid input. Please enter an integer between 1 and 3", 1, 3);
+
             try {
-                x = scanner.nextInt();
-            } catch (InputMismatchException ex) {
-                System.out.println("Not a valid input. Please type and integer from 1 to 3");
-                scanner.nextLine();
+                placeAt(x-1, y-1);
+            } catch (InvalidOperationError ex) {
+                System.out.println(String.format("Position (%s, %s) already Taken. Please select a new one.\n\n", x-1, y-1));
                 continue;
             }
-            xValid = true;
-            System.out.println("selected x: " + x);
+            turnGood = true;
         }
     }
 
-    private int getFromUser(String req, String errMsg, String var){
-        
+    /**
+     * Int input parsing system. Continues untill user inputs valid integer between lowerbound and upperboard inclusive 
+     * @param req Request Message
+     * @param errMsg Message to display on error
+     * @param lowerBound max possible integer
+     * @param upperBound min possible integer
+     * @return
+     */
+    private int getIntFromUser(String req, String errMsg, int lowerBound, int upperBound){
+        boolean valid = false;
+        int x;
+        while(!valid){
+            System.out.print(req);
+            try {
+                x = scanner.nextInt();
+            } catch (InputMismatchException ex) {
+                System.out.println(errMsg);
+                scanner.nextLine();
+                continue;
+            } 
+            if(x >= lowerBound && x <= upperBound){
+                valid = true;
+                return x;
+            } else {
+                System.out.println(errMsg);
+                continue;
+            }
+        }
+        return 0; //should never get here
     }
 
     private char getCurPlayer(){
@@ -85,6 +111,8 @@ public class Game{
     private void placeAt(int x, int y) throws InvalidOperationError {
         if (getNumAt(x, y) != 0){
             throw new InvalidOperationError();
+        } else {
+            board[(y * 3) + x] = currentPlayer;
         }
     }
 }
