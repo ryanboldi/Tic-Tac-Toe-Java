@@ -1,23 +1,22 @@
 public class Game{
-    private int[] board = {1, 0, 1, 0, 1, 0, 1, 0, 1};; //game board
+    private int[] board; //game board
+
     private byte currentPlayer; //X is 1, O is -1
 
     Game() {
-        //board = new int[9];
+        board = new int[9];
         currentPlayer = 1; //X starts
     }
 
     public String toString() {
-        String soFar = "";
-        int j = 0;
+        String soFar = " ";
         for (int i = 0; i < 3; i++){
-            if (i == 2){
-                i = 0;
-                j++;
-                soFar+="\n";
+            for (int j = 0; j < 3; j++){
+                soFar+=(board[(i * 3) + j]);
+                if (j < 2) soFar+=" | ";
             }
-            System.out.println("i: " + i + " j: " + j);
-            soFar+=(board[(j * 3) + i]);
+            soFar+="\n";
+            if (i < 2) soFar+="---+---+---\n ";
         }
 
         return soFar;
