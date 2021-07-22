@@ -12,6 +12,9 @@ public class Game{
 
     Game() {
         board = new int[9];
+        board[0] = 1;
+        board[3] = 1;
+        board[6] = 1;
         currentPlayer = 1; //X starts
     }
 
@@ -60,11 +63,12 @@ public class Game{
 
         int[] horiz = new int[3];
         for (int i = 0; i < 9; i+=3){
-            horiz[i/3] = checkIfSame(Arrays.copyOfRange(board, i, i+2));
+            horiz[i/3] = checkIfSame(Arrays.copyOfRange(board, i, i+3););
         }
+        System.out.print("\nHorizontal Wins:");
         System.out.print(horiz[0]);
         System.out.print(horiz[1]);
-        System.out.print(horiz[2]);
+        System.out.print(horiz[2] + "\n");
 
         int[] vert = new int[3];
         for (int i = 0; i < 3; i++){
@@ -75,6 +79,7 @@ public class Game{
 
             vert[i] = checkIfSame(tempCol);
         }
+        System.out.print("\nVertical Wins:");
         System.out.print(vert[0]);
         System.out.print(vert[1]);
         System.out.print(vert[2]);
