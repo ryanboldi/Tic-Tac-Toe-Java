@@ -55,7 +55,7 @@ public class Game{
             try {
                 placeAt(x-1, y-1);
             } catch (InvalidOperationError ex) {
-                System.out.println(String.format("Position (%s, %s) already Taken. Please select a new one.\n\n", x-1, y-1));
+                System.out.println(String.format("Position (%s, %s) already Taken. Please select a new one.\n\n", x, y));
                 continue;
             }
             turnGood = true;
@@ -167,9 +167,9 @@ public class Game{
 
         //top right to bottom left diagonal
         int[] trbl = new int[3];
-        System.arraycopy(board, 2, tlbr, 0, 1);
-        System.arraycopy(board, 3, tlbr, 1, 1);
-        System.arraycopy(board, 6, tlbr, 2, 1); 
+        System.arraycopy(board, 2, trbl, 0, 1);
+        System.arraycopy(board, 4, trbl, 1, 1);
+        System.arraycopy(board, 6, trbl, 2, 1); 
         diag[1] = checkIfSame(trbl);
 
         //now we have 3 arrays that represent all of the wins that are currently on the board (in a real game there would only be one win at a time.)
