@@ -8,13 +8,21 @@ public class Game{
 
     private int currentPlayer; //X is 1, O is -1
 
+    //this stuff is set when a player wins
+    public int winningPlayer = 0;
+    enum posWinTypes {
+        NONE,
+        HORIZ,
+        VERT,
+        DIAG
+    };
+    posWinTypes winType = posWinTypes.NONE;
+    public int winLocation = -1; // 0 for first row, col or diag, 1 for second, and 2 for third (no third diag)
+
     private static Scanner scanner = new Scanner(System.in);
 
     Game() {
         board = new int[9];
-        board[0] = 1;
-        board[3] = 1;
-        board[6] = 1;
         currentPlayer = 1; //X starts
     }
 
@@ -53,12 +61,39 @@ public class Game{
             turnGood = true;
         }
 
+
         //check for win
         //if not win, change current turn to next player
+        if (!checkForWin()){
+            currentPlayer *= -1;
+            getNextTurn();
+        } else {
+            //someone has won!
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println(convertIntToPlayer(winningPlayer) + " has won!");
+
+            //draw out the game board, with a line at the place where the user has won
+
+            String soFar = " ";
+            if (winType == posWinTypes.HORIZ){
+                for (int i = 0; i < 3; i++){
+                    for (int j = 0; j < 3; j++){
+                        soFar+=getPlayerAt(j, i);
+                        if (i != winLocation && j < 2) soFar+=" | ";
+                        if (i == winLocation && j < 2) soFar+="-|-";
+                    }
+                    soFar+="\n";
+                    if (i < 2) soFar+="---+---+---\n ";
+                }
+                System.out.println(soFar);
+            }
+        }
     }
 
-    //returns 1 if X has won, -1 if O has won, and 0 if no wins yet.
-    public int checkForWin(){
+    //returns if a win is on the board, and sets this classes' fields to reflect the position and winnner.
+    private boolean checkForWin(){
         //reduce array into thirds representing whether or not there was a horizontal/vertical win.
 
         int[] horiz = new int[3];
@@ -84,7 +119,7 @@ public class Game{
         System.out.print("\nVertical Wins:");
         System.out.print(vert[0]);
         System.out.print(vert[1]);
-        System.out.print(vert[2]);
+        System.out.println(vert[2]);
 
         int [] diag = new int[2];
         //top left to bottom right diagonal
@@ -102,8 +137,37 @@ public class Game{
         diag[1] = checkIfSame(trbl);
 
         //now we have 3 arrays that represent all of the wins that are currently on the board (in a real game there would only be one win at a time.)
+        //this might be less efficient than immediately returning, but I want to be able to detect multiple wins up to this point
+        //from here on out, i will only detect and report ONE WIN.
 
-        return 0;
+        for (int i = 0; i < horiz.length; i++){
+            if (horiz[i] != 0){
+                winningPlayer = horiz[i];
+                winType = posWinTypes.HORIZ;
+                winLocation = i;
+                return true;
+            }
+        }
+
+        for (int i = 0; i < vert.length; i++){
+            if (vert[i] != 0){
+                winningPlayer = vert[i];
+                winType = posWinTypes.VERT;
+                winLocation = i;
+                return true;
+            }
+        }
+
+        for (int i = 0; i < diag.length; i++){
+            if (diag[i] != 0){
+                winningPlayer = diag[i];
+                winType = posWinTypes.DIAG;
+                winLocation = i;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     //checks if all elements in arr are the same. If so, return one of the elements. If not, return 0.
@@ -149,9 +213,13 @@ public class Game{
     }
 
     private char getCurPlayer(){
-        return (currentPlayer == 1 
+        return convertIntToPlayer(currentPlayer);
+    }
+
+    private char convertIntToPlayer(int player){
+        return (player == 1 
         ? 'X' 
-        : currentPlayer == -1
+        : player == -1
             ? 'O' 
             : ' ');
     }
