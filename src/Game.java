@@ -63,12 +63,13 @@ public class Game{
 
         int[] horiz = new int[3];
         for (int i = 0; i < 9; i+=3){
-            horiz[i/3] = checkIfSame(Arrays.copyOfRange(board, i, i+3););
+            horiz[i/3] = checkIfSame(Arrays.copyOfRange(board, i, i+3));
         }
+
         System.out.print("\nHorizontal Wins:");
         System.out.print(horiz[0]);
         System.out.print(horiz[1]);
-        System.out.print(horiz[2] + "\n");
+        System.out.print(horiz[2]);
 
         int[] vert = new int[3];
         for (int i = 0; i < 3; i++){
@@ -79,12 +80,28 @@ public class Game{
 
             vert[i] = checkIfSame(tempCol);
         }
+
         System.out.print("\nVertical Wins:");
         System.out.print(vert[0]);
         System.out.print(vert[1]);
         System.out.print(vert[2]);
 
-    
+        int [] diag = new int[2];
+        //top left to bottom right diagonal
+        int[] tlbr = new int[3];
+        System.arraycopy(board, 0, tlbr, 0, 1);
+        System.arraycopy(board, 4, tlbr, 1, 1);
+        System.arraycopy(board, 8, tlbr, 2, 1); 
+        diag[0] = checkIfSame(tlbr);
+
+        //top right to bottom left diagonal
+        int[] trbl = new int[3];
+        System.arraycopy(board, 2, tlbr, 0, 1);
+        System.arraycopy(board, 3, tlbr, 1, 1);
+        System.arraycopy(board, 6, tlbr, 2, 1); 
+        diag[1] = checkIfSame(trbl);
+
+        //now we have 3 arrays that represent all of the wins that are currently on the board (in a real game there would only be one win at a time.)
 
         return 0;
     }
