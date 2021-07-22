@@ -89,6 +89,42 @@ public class Game{
                 }
                 System.out.println(soFar);
             }
+
+            if (winType == posWinTypes.VERT){
+                for (int i = 0; i < 3; i++){
+                    for (int j = 0; j < 3; j++){
+                        soFar+=getPlayerAt(j, i);
+                        if (j < 2) soFar+=" | ";
+                    }
+                    soFar+="\n";
+                    if (i < 2) {
+                        if(winLocation == 0) soFar+="-|-+---+---\n ";
+                        if(winLocation == 1) soFar+="---+-|-+---\n ";
+                        if(winLocation == 2) soFar+="---+---+-|-\n ";
+                    };
+                }
+                System.out.println(soFar);
+            }
+
+            if (winType == posWinTypes.DIAG){
+                for (int i = 0; i < 3; i++){
+                    for (int j = 0; j < 3; j++){
+                        soFar+=getPlayerAt(j, i);
+                        if (j < 2) soFar+=" | ";
+                    }
+                    soFar+="\n";
+                    if (i == 0) {
+                        //tlbr
+                        if(winLocation == 0) soFar+="---\\---+---\n ";
+                        if(winLocation == 1) soFar+="---+---/---\n ";
+                    } else if (i == 1) {
+                        //tlbr
+                        if(winLocation == 0) soFar+="---+---\\---\n ";
+                        if(winLocation == 1) soFar+="---/---+---\n ";
+                    };
+                }
+                System.out.println(soFar);
+            }
         }
     }
 
