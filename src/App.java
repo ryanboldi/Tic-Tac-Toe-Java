@@ -3,5 +3,6 @@ public class App {
         Game g = new Game();
         g.getNextTurn();
         System.out.print(g.toString());
+        g.checkForWin();
     }
 }

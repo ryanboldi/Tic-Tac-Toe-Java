@@ -1,17 +1,17 @@
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
 public class Game{
-    private byte[] board; //game board
+    private int[] board; //game board
 
-    private byte currentPlayer; //X is 1, O is -1
+    private int currentPlayer; //X is 1, O is -1
 
     private static Scanner scanner = new Scanner(System.in);
 
     Game() {
-        board = new byte[9];
-        board[0] = 1;
+        board = new int[9];
         currentPlayer = 1; //X starts
     }
 
@@ -49,6 +49,50 @@ public class Game{
             }
             turnGood = true;
         }
+
+        //check for win
+        //if not win, change current turn to next player
+    }
+
+    //returns 1 if X has won, -1 if O has won, and 0 if no wins yet.
+    public int checkForWin(){
+        //reduce array into thirds representing whether or not there was a horizontal/vertical win.
+
+        int[] horiz = new int[3];
+        for (int i = 0; i < 9; i+=3){
+            horiz[i/3] = checkIfSame(Arrays.copyOfRange(board, i, i+2));
+        }
+        System.out.print(horiz[0]);
+        System.out.print(horiz[1]);
+        System.out.print(horiz[2]);
+
+        int[] vert = new int[3];
+        for (int i = 0; i < 3; i++){
+            int[] tempCol = new int[3];
+            System.arraycopy(board, i, tempCol, 0, 1);
+            System.arraycopy(board, i + 3, tempCol, 1, 1);
+            System.arraycopy(board, i + 6, tempCol, 2, 1); 
+
+            vert[i] = checkIfSame(tempCol);
+        }
+        System.out.print(vert[0]);
+        System.out.print(vert[1]);
+        System.out.print(vert[2]);
+
+    
+
+        return 0;
+    }
+
+    //checks if all elements in arr are the same. If so, return one of the elements. If not, return 0.
+    private int checkIfSame(int[] arr){
+        int compareTo = arr[0];
+        for( int i = 1; i < arr.length; i++){
+            if(arr[i] != compareTo){
+                return 0;
+            }
+        }
+        return compareTo;
     }
 
     /**
