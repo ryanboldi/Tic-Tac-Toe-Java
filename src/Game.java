@@ -23,6 +23,9 @@ public class Game{
 
     Game() {
         board = new int[9];
+        for (int i = 2; i < 11; i++){
+            board[i-2] = i;
+        }
         currentPlayer = 1; //X starts
     }
 
@@ -33,7 +36,7 @@ public class Game{
         String soFar = " ";
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++){
-                soFar+=getPlayerAt(j, i);
+                soFar+=getPlayerAt(i*3 + j);
                 if (j < 2) soFar+=" | ";
             }
             soFar+="\n";
@@ -48,14 +51,13 @@ public class Game{
         while(!turnGood){
             System.out.print(this.toString());
             System.out.println(String.format("Player: %c", getCurPlayer()));
-            System.out.println("Please select a board position to place at (x,y):");
-            int x = getIntFromUser("x (1-3): ", "Invalid input. Please enter an integer between 1 and 3", 1, 3);
-            int y = getIntFromUser("y (1-3): ", "Invalid input. Please enter an integer between 1 and 3", 1, 3);
+            System.out.println("Please select a board position to place at (1-9):");
+            int x = getIntFromUser("Position: ", "Invalid input. Please enter an integer between 1 and 9", 1, 9);
 
             try {
-                placeAt(x-1, y-1);
+                placeAt(x);
             } catch (InvalidOperationError ex) {
-                System.out.println(String.format("Position (%s, %s) already Taken. Please select a new one.\n\n", x, y));
+                System.out.println(String.format("Position %s already Taken. Please select a new one.\n\n", x));
                 continue;
             }
             turnGood = true;
@@ -80,7 +82,7 @@ public class Game{
             if (winType == posWinTypes.HORIZ){
                 for (int i = 0; i < 3; i++){
                     for (int j = 0; j < 3; j++){
-                        soFar+=getPlayerAt(j, i);
+                        soFar+=getPlayerAt(i*3 + j);
                         if (i != winLocation && j < 2) soFar+=" | ";
                         if (i == winLocation && j < 2) soFar+="-|-";
                     }
@@ -93,7 +95,7 @@ public class Game{
             if (winType == posWinTypes.VERT){
                 for (int i = 0; i < 3; i++){
                     for (int j = 0; j < 3; j++){
-                        soFar+=getPlayerAt(j, i);
+                        soFar+=getPlayerAt(i*3 + j);
                         if (j < 2) soFar+=" | ";
                     }
                     soFar+="\n";
@@ -109,7 +111,7 @@ public class Game{
             if (winType == posWinTypes.DIAG){
                 for (int i = 0; i < 3; i++){
                     for (int j = 0; j < 3; j++){
-                        soFar+=getPlayerAt(j, i);
+                        soFar+=getPlayerAt(i*3 + j);
                         if (j < 2) soFar+=" | ";
                     }
                     soFar+="\n";
@@ -262,27 +264,26 @@ public class Game{
 
     
     /**
-     * gets 'X','O' or ' ' depending on which player is occupying this position
-     * @param x col that the player is in (0-indexed)
-     * @param y row that the player is in (0-indexed)
-     * @return one character 'X', 'O' or ' ';
+     * gets 'X','O' or '1-9' depending on which player is occupying this position
+     * @param position the player is in
+     * @return one character 'X', 'O' or a number;
      */
-    private char getPlayerAt(int x, int y){
-        int player = board[(y*3) + x];
+    private char getPlayerAt(int x){
+        int player = board[x];
         return (player == 1 
         ? 'X' 
         : player == -1
             ? 'O' 
-            : ' ');
+            : (char)(board[x]-1+'0'));
     }
 
-    private int getNumAt(int x, int y) {return board[(y*3 + x)];}
+    private int getNumAt(int x) {return board[x];}
 
-    private void placeAt(int x, int y) throws InvalidOperationError {
-        if (getNumAt(x, y) != 0){
+    private void placeAt(int x) throws InvalidOperationError {
+        if (getNumAt(x - 1) == 1 || getNumAt(x - 1) == -1){
             throw new InvalidOperationError();
         } else {
-            board[(y * 3) + x] = currentPlayer;
+            board[x - 1] = currentPlayer;
         }
     }
 }
